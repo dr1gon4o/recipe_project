@@ -1,19 +1,21 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+
 
 class Chef(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
     bio = models.TextField()
 
     def __str__(self):
-        return self.user.username
+        return self.user.email
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
+
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=100)
@@ -21,21 +23,22 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.name
 
+
 class Recipe(models.Model):
     chef = models.ForeignKey(Chef, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     instructions = models.TextField()
-    ingredients = models.ManyToManyField(Ingredient)
     categories = models.ManyToManyField(Category)
+    ingredients = models.ManyToManyField(Ingredient)
 
     def __str__(self):
         return self.title
+
 
 class Post(models.Model):
-    chef = models.ForeignKey(Chef, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
     content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title
+        return f"Post for {self.recipe.title}"
