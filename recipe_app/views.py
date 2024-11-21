@@ -1,16 +1,17 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.views import LoginView, LogoutView
-from .models import Recipe, Category, Ingredient
-from .forms import RecipeForm
-from django.views.generic import DetailView, UpdateView
-from django.urls import reverse_lazy
-from .models import Chef
-from .forms import ChefForm
+from .models import Recipe, Chef  # Ensure Chef is imported correctly
+from .forms import RecipeForm, ChefForm
+
+# Home View - Lists all recipes on the landing page
+class HomeView(ListView):
+    model = Recipe
+    template_name = 'home.html'
+    context_object_name = 'recipes'
 
 # Profile View - to show the user's profile page
 class ProfileView(DetailView):
@@ -32,12 +33,6 @@ class ProfileUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('profile')  # Redirect to the profile view after successful update
-
-# Class-based view for Home page
-class HomeView(ListView):
-    model = Recipe
-    template_name = 'home.html'
-    context_object_name = 'recipes'
 
 # User Registration (Create user using CBV)
 class RegisterView(CreateView):
@@ -71,7 +66,8 @@ class RecipeCreateView(CreateView):
         return response
 
     def get_success_url(self):
-        return reverse_lazy('home')  # Redirect to home after successful recipe creation
+        # return reverse_lazy('home')  # Redirect to home after successful recipe creation
+        return reverse_lazy('view_recipe', kwargs={'pk': self.object.pk})
 
 # Recipe Update (Update an existing recipe with CBV)
 class RecipeUpdateView(UpdateView):
@@ -80,7 +76,11 @@ class RecipeUpdateView(UpdateView):
     template_name = 'update_recipe.html'
 
     def get_queryset(self):
-        return Recipe.objects.filter(chef=self.request.user)  # Only allow updating recipes created by the logged-in user
+        # return Recipe.objects.filter(chef=self.request.user)  # Only allow deleting recipes created by the logged-in user
+        queryset = Recipe.objects.filter(chef=self.request.user)
+        if not queryset.exists():
+            raise PermissionDenied("You do not have permission to edit or delete this recipe.")
+        return queryset
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -89,7 +89,8 @@ class RecipeUpdateView(UpdateView):
         return response
 
     def get_success_url(self):
-        return reverse_lazy('home')  # Redirect to home after successful update
+        # return reverse_lazy('home')  # Redirect to home after successful update
+        return reverse_lazy('view_recipe', kwargs={'pk': self.object.pk})
 
 # Recipe Delete (Delete a recipe with CBV)
 class RecipeDeleteView(DeleteView):
@@ -98,7 +99,11 @@ class RecipeDeleteView(DeleteView):
     context_object_name = 'recipe'
 
     def get_queryset(self):
-        return Recipe.objects.filter(chef=self.request.user)  # Only allow deleting recipes created by the logged-in user
+        # return Recipe.objects.filter(chef=self.request.user)  # Only allow deleting recipes created by the logged-in user
+        queryset = Recipe.objects.filter(chef=self.request.user)
+        if not queryset.exists():
+            raise PermissionDenied("You do not have permission to edit or delete this recipe.")
+        return queryset
 
     def get_success_url(self):
         messages.success(self.request, 'Recipe deleted successfully!')

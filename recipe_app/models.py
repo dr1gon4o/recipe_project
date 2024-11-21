@@ -1,15 +1,8 @@
 from django.db import models
-# from django.contrib.auth.models import AbstractUser, User
 from django.contrib.auth.models import User
 
 
 class Chef(models.Model):
-    # user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
-    # bio = models.TextField()
-    #
-    # def __str__(self):
-    #     return self.user.email
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, blank=True)  # Chef's name, optional
     bio = models.TextField(blank=True, null=True)  # Chef's bio, optional text field
@@ -33,8 +26,9 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
-    chef = models.ForeignKey(Chef, on_delete=models.CASCADE)
+    chef = models.ForeignKey(Chef, on_delete=models.CASCADE)  # Links to the Chef
     title = models.CharField(max_length=200)
+    description = models.TextField()  # Add description field
     instructions = models.TextField()
     categories = models.ManyToManyField(Category)
     ingredients = models.ManyToManyField(Ingredient)

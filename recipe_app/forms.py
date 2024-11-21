@@ -1,8 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-# from .models import Chef, Category, Ingredient, Recipe, Post
-from .models import Chef, Recipe, Post
-
+from .models import Chef, Recipe, Post, Category, Ingredient
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -10,7 +8,7 @@ class UserRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email']
+        fields = ['email']  # Only email is required for registration
 
     def clean(self):
         cleaned_data = super().clean()
@@ -23,7 +21,7 @@ class UserRegistrationForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.username = user.email
+        user.username = user.email  # Use the email as the username
         if commit:
             user.set_password(self.cleaned_data['password'])
             user.save()
@@ -41,8 +39,7 @@ class ChefForm(forms.ModelForm):
 
 class RecipeForm(forms.ModelForm):
     categories = forms.CharField(max_length=255, required=True, help_text="Enter the categories, separated by commas.")
-    ingredients = forms.CharField(max_length=255, required=True,
-                                  help_text="Enter the ingredients, separated by commas.")
+    ingredients = forms.CharField(max_length=255, required=True, help_text="Enter the ingredients, separated by commas.")
 
     class Meta:
         model = Recipe
@@ -50,73 +47,43 @@ class RecipeForm(forms.ModelForm):
 
     def clean_categories(self):
         data = self.cleaned_data['categories']
-        return [category.strip() for category in data.split(',')]  # Split input into a list of categories
+        categories = [category.strip() for category in data.split(',')]  # Split input into a list of categories
+        # Check for duplicates in user input
+        if len(categories) != len(set(categories)):
+            raise forms.ValidationError("Duplicate categories are not allowed.")
+        # Ensure that the categories exist in the database, or create them
+        category_objects = []
+        for category_name in categories:
+            category, created = Category.objects.get_or_create(name=category_name)
+            category_objects.append(category)
+        return category_objects  # Return the list of Category objects
+
+        # category_objs = []
+        # for category in categories:
+        #     category_obj, created = Category.objects.get_or_create(name=category)  # Get or create the category
+        #     category_objs.append(category_obj)
+        # return category_objs
 
     def clean_ingredients(self):
         data = self.cleaned_data['ingredients']
-        return [ingredient.strip() for ingredient in data.split(',')]  # Split input into a list of ingredients
+        ingredients = [ingredient.strip() for ingredient in data.split(',')]  # Split input into a list of ingredients
+        # Check for duplicates in user input
+        if len(ingredients) != len(set(ingredients)):
+            raise forms.ValidationError("Duplicate ingredients are not allowed.")
 
-    # # Allow the user to enter a custom category and ingredient
-    # new_category = forms.CharField(max_length=100, required=False, label='New Category',
-    #                                help_text='Enter a new category if needed')
-    # new_ingredient = forms.CharField(max_length=100, required=False, label='New Ingredient',
-    #                                  help_text='Enter a new ingredient if needed')
-    #
-    # class Meta:
-    #     model = Recipe
-    #     fields = ['title', 'instructions', 'categories', 'ingredients']
-    #     widgets = {
-    #         'instructions': forms.Textarea(attrs={'rows': 6, 'cols': 50}),
-    #     }
-    #
-    # # Custom validation for categories and ingredients
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #
-    #     categories = cleaned_data.get('categories')
-    #     ingredients = cleaned_data.get('ingredients')
-    #     new_category = cleaned_data.get('new_category')
-    #     new_ingredient = cleaned_data.get('new_ingredient')
-    #
-    #     # Ensure at least one category is provided (either selected or custom)
-    #     if not categories and not new_category:
-    #         raise forms.ValidationError('At least one category must be selected or entered.')
-    #
-    #     # Ensure at least one ingredient is provided (either selected or custom)
-    #     if not ingredients and not new_ingredient:
-    #         raise forms.ValidationError('At least one ingredient must be selected or entered.')
-    #
-    #     return cleaned_data
-    #
-    # def save(self, commit=True):
-    #     # First, save the Recipe instance
-    #     recipe = super().save(commit=False)
-    #
-    #     # If the new category is provided, create it and associate it with the recipe
-    #     new_category = self.cleaned_data.get('new_category')
-    #     if new_category:
-    #         category, created = Category.objects.get_or_create(name=new_category)
-    #         recipe.categories.add(category)
-    #
-    #     # If the new ingredient is provided, create it and associate it with the recipe
-    #     new_ingredient = self.cleaned_data.get('new_ingredient')
-    #     if new_ingredient:
-    #         ingredient, created = Ingredient.objects.get_or_create(name=new_ingredient)
-    #         recipe.ingredients.add(ingredient)
-    #
-    #     # Add selected categories and ingredients to the recipe
-    #     categories = self.cleaned_data.get('categories')
-    #     ingredients = self.cleaned_data.get('ingredients')
-    #
-    #     if categories:
-    #         recipe.categories.add(*categories)
-    #     if ingredients:
-    #         recipe.ingredients.add(*ingredients)
-    #
-    #     if commit:
-    #         recipe.save()
-    #
-    #     return recipe
+        # Ensure that the ingredients exist in the database, or create them
+        ingredient_objects = []
+        for ingredient_name in ingredients:
+            ingredient, created = Ingredient.objects.get_or_create(name=ingredient_name)
+            ingredient_objects.append(ingredient)
+
+        return ingredient_objects  # Return the list of Ingredient objects
+
+        # ingredient_objs = []
+        # for ingredient in ingredients:
+        #     ingredient_obj, created = Ingredient.objects.get_or_create(name=ingredient)  # Get or create the ingredient
+        #     ingredient_objs.append(ingredient_obj)
+        # return ingredient_objs
 
 
 class PostForm(forms.ModelForm):
