@@ -33,7 +33,7 @@ class UserRegistrationForm(forms.ModelForm):
 class ChefForm(forms.ModelForm):
     class Meta:
         model = Chef
-        fields = ['bio']
+        fields = ['name', 'bio']
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 4, 'cols': 50}),
         }
