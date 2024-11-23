@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class="container">
+        {% if user.is_authenticated %}
         <div class="row">
             <!-- Recipes List -->
             <div class="col-md-6">
@@ -59,5 +60,14 @@
                 </div>
             </div>
         </div>
+        {% else %}
+        <h2> Welcome to our recipe project</h2>
+        <div> You are a chef and want to share your creative recipe ideas?
+             <br>join us today and try that sweet register button </br> </div>
+        <br>
+        <nav>You are a chef and want to share your creative recipe ideas?
+            <br>try the register button and join us to begin your journey </br></nav>
+        <a href=""></a>
+        {% endif %}
     </div>
 {% endblock %}

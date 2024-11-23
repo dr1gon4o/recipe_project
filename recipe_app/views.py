@@ -223,3 +223,8 @@ class PostDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('home')  # Redirect to home after deleting a post
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'view_post.html'
+    context_object_name = 'post'
