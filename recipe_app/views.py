@@ -228,3 +228,8 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'view_post.html'
     context_object_name = 'post'
+
+
+class ChefView(DeleteView):
+    model = Chef
+    template_name = 'view_chef.html'
