@@ -89,7 +89,7 @@ class RecipeForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['recipe', 'content']
+        fields = ['recipe', 'comment']
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 6, 'cols': 50}),
+            'comment': forms.Textarea(attrs={'rows': 6, 'cols': 50}),
         }

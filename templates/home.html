@@ -1,19 +1,63 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Recipe List</h1>
-    <div class="row">
-        {% for recipe in recipes %}
-            <div class="col-md-4">
-                <div class="card">
-                    <img src="{{ recipe.image.url }}" class="card-img-top" alt="Recipe Image">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ recipe.title }}</h5>
-                        <p class="card-text">{{ recipe.description }}</p>
-                        <a href="{% url 'view_recipe' recipe.pk %}" class="btn btn-primary">View Recipe</a>
-                    </div>
+    <div class="container">
+        <div class="row">
+            <!-- Recipes List -->
+            <div class="col-md-6">
+                <h1>Recipe List</h1>
+                <div class="row">
+                    {% for recipe in recipes %}
+                        <div class="col-md-12 mb-3">
+                            <div class="card">
+                                <!-- Uncomment the following line if you have images -->
+                                <!-- <img src="{{ recipe.image.url }}" class="card-img-top" alt="Recipe Image"> -->
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ recipe.title }}</h5>
+                                    <p class="card-text">{{ recipe.description }}</p>
+                                    <a href="{% url 'view_recipe' recipe.pk %}" class="btn btn-primary">View Recipe</a>
+                                    <a href="{% url 'update_recipe' recipe.pk %}" class="btn btn-secondary">Update Recipe</a>
+                                    <a href="{% url 'delete_recipe' recipe.pk %}" class="btn btn-danger">Delete Recipe</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- Pagination for recipes -->
+                <div class="pagination">
+                    {{ recipes.paginator.num_pages }} pages
+                    {% for page_num in recipes.paginator.page_range %}
+                        <a href="?page={{ page_num }}">{{ page_num }}</a>
+                    {% endfor %}
                 </div>
             </div>
-        {% endfor %}
+
+            <!-- Posts List -->
+            <div class="col-md-6">
+                <h1>Posts List</h1>
+                <div class="row">
+                    {% for post in posts %}
+                        <div class="col-md-12 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ post.recipe.title }}</h5>
+                                    <p class="card-text">{{ post.comment }}</p>
+                                    <a href="{% url 'view_post' post.pk %}" class="btn btn-primary">View Post</a>
+                                    <a href="{% url 'update_post' post.pk %}" class="btn btn-secondary">Update Post</a>
+                                    <a href="{% url 'delete_post' post.pk %}" class="btn btn-danger">Delete Post</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- Pagination for posts -->
+                <div class="pagination">
+                    {{ posts.paginator.num_pages }} pages
+                    {% for page_num in posts.paginator.page_range %}
+                        <a href="?page={{ page_num }}">{{ page_num }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

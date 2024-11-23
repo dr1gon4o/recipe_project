@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <nav><h1>Recipe List</h1>
+    <div class="row">
+        {% for recipe in recipes %}
+            <div class="col-md-4">
+                <div class="card">
+<!--                    <img src="{{ recipe.image.url }}" class="card-img-top" alt="Recipe Image">-->
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.title }}</h5>
+                        <p class="card-text">{{ recipe.description }}</p>
+                        <a href="{% url 'view_recipe' recipe.pk %}" class="btn btn-primary">View Recipe</a>
+                        <a href="{% url 'update_recipe' recipe.pk %}" class="btn btn-primary">Update Recipe</a>
+                        <a href="{% url 'delete_recipe' recipe.pk %}" class="btn btn-primary">Delete Recipe</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    </nav>
+    <nav><h1>Posts List</h1>
+    <div class="row">
+        {% for post in posts %}
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.recipe }}</h5>
+                        <p class="card-text">{{ post.comment }}</p>
+                        <a href="{% url 'view_recipe' recipe.pk %}" class="btn btn-primary">View Recipe</a>
+                        <a href="{% url 'update_recipe' recipe.pk %}" class="btn btn-primary">Update Recipe</a>
+                        <a href="{% url 'delete_recipe' recipe.pk %}" class="btn btn-primary">Delete Recipe</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    </nav>
+{% endblock %}

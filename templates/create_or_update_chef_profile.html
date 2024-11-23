@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h2>{% if chef %}Update Your Chef Profile{% else %}Create Your Chef Profile{% endif %}</h2>
+    
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">
+        {% if chef %}Update Profile{% else %}Create Profile{% endif %}
+      </button>
+    </form>
+  </div>
+{% endblock %}

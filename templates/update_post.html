@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{{ recipe.title }}</h2>
+    <img src="{{ recipe.image.url }}" class="img-fluid" alt="{{ recipe.title }}">
+    <p>{{ recipe.description }}</p>
+    <h3>Ingredients</h3>
+    <ul>
+        {% for ingredient in recipe.ingredients.all %}
+            <li>{{ ingredient.name }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Categories</h3>
+    <ul>
+        {% for category in recipe.categories.all %}
+            <li>{{ category.name }}</li>
+        {% endfor %}
+    </ul>
+    <p><strong>Chef:</strong> {{ recipe.chef.user.username }}</p>
+
+    {% if recipe.chef == user %}
+        <a href="{% url 'update_recipe' recipe.pk %}" class="btn btn-primary">Edit Recipe</a>
+        <a href="{% url 'delete_recipe' recipe.pk %}" class="btn btn-danger">Delete Recipe</a>
+    {% endif %}
+{% endblock %}
+
+
+<!--{% extends 'base.html' %}-->
+
+<!--{% block content %}-->
+<!--  <h2>Update Post</h2>-->
+
+<!--  <form method="post">-->
+<!--    {% csrf_token %}-->
+<!--    {{ form.as_p }}-->
+<!--    <button type="submit" class="btn btn-primary">Update Post</button>-->
+<!--  </form>-->
+
+<!--  <br>-->
+<!--  <a href="{% url 'home' %}">Back to Home</a>-->
+<!--{% endblock %}-->

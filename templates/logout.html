@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% block title %}logout{% endblock %}
+    <a> you are logged out </a>
+    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">home</a></li>
+    <button type="submit" class="btn btn-primary">go back home</button>
+    <a> href="{% url 'home' %}" </a>
+{% endblock %}
