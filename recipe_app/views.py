@@ -3,12 +3,11 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.views import LoginView, LogoutView
 from .models import Recipe, Chef, Post  # Ensure Chef is imported correctly
 from .forms import RecipeForm, ChefForm, PostForm
 from django.shortcuts import redirect
-from django.views.generic import DetailView
 
 
 # Home View - Lists all recipes on the landing page
@@ -53,26 +52,27 @@ class ProfileView(DetailView):
     def get_object(self):
         # Return the Chef profile of the logged-in user, or raise a 404 if it doesn't exist
         try:
-            return self.request.user.chef
+            return self.request.user
         except Chef.DoesNotExist:
             return redirect('create_or_update_chef_profile')
 
-    # def get_object(self):
-    #     return self.request.user.chef  # Fetch the Chef profile for the logged-in user
+    def get_object(self):
+        return self.request.user.chef  # Fetch the Chef profile for the logged-in user
 
 # Profile Update View - to allow the user to edit their profile
-class ProfileUpdateView(UpdateView):
-    model = Chef
-    form_class = ChefForm
-    template_name = 'update_profile.html'
-    context_object_name = 'chef'
+# class ProfileUpdateView(UpdateView):
+#     model = Chef
+#     form_class = ChefForm
+#     template_name = 'update_profile.html'
+#     context_object_name = 'chef'
+#
+#     def get_object(self):
+#         # return self.request.user.chef  # Get the Chef instance linked to the logged-in user
+#         return self.request.user  # Get the Chef instance linked to the logged-in user
+#
+#     def get_success_url(self):
+#         return reverse_lazy('profile')  # Redirect to the profile view after successful update
 
-    def get_object(self):
-        # return self.request.user.chef  # Get the Chef instance linked to the logged-in user
-        return self.request.user  # Get the Chef instance linked to the logged-in user
-
-    def get_success_url(self):
-        return reverse_lazy('profile')  # Redirect to the profile view after successful update
 
 # User Registration (Create user using CBV)
 class RegisterView(CreateView):
@@ -108,11 +108,13 @@ class RecipeCreateView(CreateView):
     template_name = 'create_recipe.html'
 
     def form_valid(self, form):
+
         # Check if the user has a Chef profile
         # if not hasattr(self.request.user, 'chef'):  # User doesn't have a Chef profile
         #     messages.error(self.request, "You need to create a Chef profile first.")
         #     return redirect('create_or_update_chef_profile')  # Redirect to the Chef profile creation page
         # Ensure the logged-in user has a Chef profile
+
         if not self.request.user.chef:
             messages.error(self.request, "You need to create a Chef profile first.")
             return redirect('create_or_update_chef_profile')  # Redirect to the Chef profile creation page
@@ -140,8 +142,8 @@ class RecipeCreateView(CreateView):
     #     return response
 
     def get_success_url(self):
-        # return reverse_lazy('home')  # Redirect to home after successful recipe creation
-        return reverse_lazy('view_recipe', kwargs={'pk': self.object.pk})
+        return reverse_lazy('home')  # Redirect to home after successful recipe creation
+        # return reverse_lazy('view_recipe', kwargs={'pk': self.object.pk})
 
 # Recipe Update (Update an existing recipe with CBV)
 class RecipeUpdateView(UpdateView):
@@ -149,15 +151,16 @@ class RecipeUpdateView(UpdateView):
     form_class = RecipeForm
     template_name = 'update_recipe.html'
 
-    def get_queryset(self):
-        # return Recipe.objects.filter(chef=self.request.user)  # Only allow deleting recipes created by the logged-in user
-        queryset = Recipe.objects.filter(chef=self.request.user)
-        if not queryset.exists():
-            raise PermissionDenied("You do not have permission to edit or delete this recipe.")
-        return queryset
+    # def get_queryset(self):
+    #     # return Recipe.objects.filter(chef=self.request.user)  # Only allow deleting recipes created by the logged-in user
+    #     queryset = Recipe.objects.filter(chef=self.request.user)
+    #     if not queryset.exists():
+    #         raise PermissionDenied("You do not have permission to edit or delete this recipe.")
+    #     return queryset
 
     def form_valid(self, form):
         response = super().form_valid(form)
+        # form.save()
         form.save_m2m()  # Save many-to-many relationships (categories, ingredients)
         messages.success(self.request, 'Recipe updated successfully!')
         return response
@@ -172,12 +175,12 @@ class RecipeDeleteView(DeleteView):
     template_name = 'delete_recipe.html'
     context_object_name = 'recipe'
 
-    def get_queryset(self):
-        # return Recipe.objects.filter(chef=self.request.user)  # Only allow deleting recipes created by the logged-in user
-        queryset = Recipe.objects.filter(chef=self.request.user)
-        if not queryset.exists():
-            raise PermissionDenied("You do not have permission to edit or delete this recipe.")
-        return queryset
+    # def get_queryset(self):
+    #     # return Recipe.objects.filter(chef=self.request.user)  # Only allow deleting recipes created by the logged-in user
+    #     queryset = Recipe.objects.filter(chef=self.request.user)
+    #     if not queryset.exists():
+    #         raise PermissionDenied("You do not have permission to edit or delete this recipe.")
+    #     return queryset
 
     def get_success_url(self):
         messages.success(self.request, 'Recipe deleted successfully!')
@@ -192,9 +195,10 @@ class RecipeDetailView(DetailView):
 
 class PostCreateView(CreateView):
     model = Post
+    form_class = PostForm
     template_name = 'create_post.html'
     context_object_name = 'post'
-    fields = ['recipe', 'comment']  # Adjust fields as needed
+    # fields = ['recipe', 'comment']  # Adjust fields as needed
 
     def form_valid(self, form):
         # Optionally, you can add user-specific behavior, like linking the post to a user or chef
@@ -208,6 +212,7 @@ class PostCreateView(CreateView):
 
 class PostUpdateView(UpdateView):
     model = Post
+    form_class = PostForm
     template_name = 'update_post.html'
     context_object_name = 'post'
     fields = ['recipe', 'comment']  # Adjust fields as needed
@@ -224,12 +229,22 @@ class PostDeleteView(DeleteView):
     def get_success_url(self):
         return reverse_lazy('home')  # Redirect to home after deleting a post
 
+
 class PostDetailView(DetailView):
     model = Post
     template_name = 'view_post.html'
     context_object_name = 'post'
 
 
+class AboutView(TemplateView):
+    template_name = 'about.html'
+
+
+class ContactView(TemplateView):
+    template_name = 'contact.html'
+
+
+# no connection to chef model or post or recipe
 class ChefView(DeleteView):
     model = Chef
     template_name = 'view_chef.html'

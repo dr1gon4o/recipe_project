@@ -1,10 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% if recipe.chef %}
     <h2>Update Recipe</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-warning">Update Recipe</button>
     </form>
+  <br>
+  <a href="{% url 'home' %}">Back to Home</a>
+{% else %}
+<h2>You need to create a Chef profile first to be able to Create Recipe</h2>
+<br>
+<a href="{% url 'create_or_update_chef_profile' %}" class="btn btn-success">Create Chef Profile</a>
+<br>
+<a href="{% url 'home' %}">Back to Home</a>
+{% endif %}
 {% endblock %}

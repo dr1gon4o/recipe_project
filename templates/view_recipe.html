@@ -2,7 +2,7 @@
 
 {% block content %}
     <h2>{{ recipe.title }}</h2>
-    <img src="{{ recipe.image.url }}" class="img-fluid" alt="{{ recipe.title }}">
+<!--    <img src="{{ recipe.image.url }}" class="img-fluid" alt="{{ recipe.title }}">-->
     <p>{{ recipe.description }}</p>
     <h3>Ingredients</h3>
     <ul>
@@ -16,7 +16,8 @@
             <li>{{ category.name }}</li>
         {% endfor %}
     </ul>
-    <p><strong>Chef:</strong> {{ recipe.chef.user.username }}</p>
+    <p><strong>Chef:</strong> {{ recipe.chef }}
+        <a href=""> view chef's profile</a></p>
 
     {% if recipe.chef == user %}
         <a href="{% url 'update_recipe' recipe.pk %}" class="btn btn-primary">Edit Recipe</a>
