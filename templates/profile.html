@@ -5,4 +5,5 @@
     <h2>{% if chef %}{{ chef}}'s Profile{% else %}{{ chef.user.username }}'s Profile{% endif %}</h2>
     <p><strong>Bio:</strong> {{ chef.bio }}</p>
     <a href="{% url 'create_or_update_chef_profile' %}" class="btn btn-primary">Edit Profile</a>
+    <a href="edit" class="btn btn-primary">Edit</a>
 {% endblock %}

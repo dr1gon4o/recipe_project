@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% if recipe.chef %}
+{% if recipe.chef.user %}
     <h2>Are you sure you want to delete this recipe?</h2>
     <p>{{ recipe.title }}</p>
     <form method="post">
