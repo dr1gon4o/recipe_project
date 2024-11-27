@@ -1,0 +1,76 @@
+<!--{% extends 'base.html' %}-->
+
+<!--{% block content %}-->
+<!--    &lt;!&ndash; Dashboard Header &ndash;&gt;-->
+<!--    <div class="dashboard-header">-->
+<!--        <h2>Dashboard</h2>-->
+<!--        <form class="form-inline" method="GET" action="{% url 'search' %}">-->
+<!--            <input class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search" name="q">-->
+<!--            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+<!--        </form>-->
+<!--    </div>-->
+
+
+<!--    &lt;!&ndash; Dashboard Sidebar &ndash;&gt;-->
+<!--    {% if user.is_authenticated %}-->
+<!--        <div class="sidebar">-->
+<!--            <a href="{% url 'recipe_list' %}">-->
+<!--                <i class="fa fa-book"></i> Recipes-->
+<!--            </a>-->
+<!--            <a href="{% url 'post_list' %}">-->
+<!--                <i class="fa fa-comment"></i> Posts-->
+<!--            </a>-->
+<!--            <a href="{% url 'category_list' %}">-->
+<!--                <i class="fa fa-list"></i> Categories-->
+<!--            </a>-->
+<!--            <a href="{% url 'ingredient_list' %}">-->
+<!--                <i class="fa fa-cogs"></i> Ingredients-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    {% endif %}-->
+
+<!--    &lt;!&ndash; Main Content &ndash;&gt;-->
+<!--    <div class="main-content">-->
+<!--        <div class="container">-->
+<!--            <div class="row">-->
+<!--                &lt;!&ndash; Example Cards (Can display count of items) &ndash;&gt;-->
+<!--                <div class="col-md-3">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-body">-->
+<!--                            <h5 class="card-title">Recipes</h5>-->
+<!--                            <p class="card-text">Total Recipes: {{ recipe_count }}</p>-->
+<!--                            <a href="{% url 'recipe_list' %}" class="btn btn-primary">View Recipes</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-3">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-body">-->
+<!--                            <h5 class="card-title">Posts</h5>-->
+<!--                            <p class="card-text">Total Posts: {{ post_count }}</p>-->
+<!--                            <a href="{% url 'post_list' %}" class="btn btn-primary">View Posts</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-3">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-body">-->
+<!--                            <h5 class="card-title">Categories</h5>-->
+<!--                            <p class="card-text">Total Categories: {{ category_count }}</p>-->
+<!--                            <a href="{% url 'category_list' %}" class="btn btn-primary">View Categories</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-3">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-body">-->
+<!--                            <h5 class="card-title">Ingredients</h5>-->
+<!--                            <p class="card-text">Total Ingredients: {{ ingredient_count }}</p>-->
+<!--                            <a href="{% url 'ingredient_list' %}" class="btn btn-primary">View Ingredients</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--{% endblock %}-->

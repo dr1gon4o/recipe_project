@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Search Results</h2>
+    <div class="sidebar">
+               <div class="container mt-1">
+<!--                    <form id="search-form" method="GET">-->
+                    <form id="search-form-extended" method="GET">
+<!--                    <form class="form-inline" id="search-form" method="GET">-->
+                        <input type="text" class="search-input-extended form-control" placeholder="Search..." />
+                    </form>
+                    <div id="search-results-extended">
+                        <div id="recipes-results-extended"></div>
+                        <div id="posts-results-extended"></div>
+                        <div id="categories-results-extended"></div>
+                        <div id="ingredients-results-extended"></div>
+                    </div>
+                </div>
+
+<!--    <form class="form-inline" method="GET" action="{% url 'search' %}">-->
+<!--        <input class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search" name="q">-->
+<!--        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+<!--    </form>-->
+
+<!--    {% if results %}-->
+<!--        <h3>Recipes</h3>-->
+<!--        {% if results.recipes %}-->
+<!--            <ul>-->
+<!--                {% for recipe in results.recipes %}-->
+<!--                    <li><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></li>-->
+<!--                {% endfor %}-->
+<!--            </ul>-->
+<!--        {% else %}-->
+<!--            <p>No recipes found.</p>-->
+<!--        {% endif %}-->
+
+<!--        <h3>Posts</h3>-->
+<!--        {% if results.posts %}-->
+<!--            <ul>-->
+<!--                {% for post in results.posts %}-->
+<!--                    <li><a href="{% url 'post_detail' post.id %}">{{ post.comment }}</a></li>-->
+<!--                {% endfor %}-->
+<!--            </ul>-->
+<!--        {% else %}-->
+<!--            <p>No posts found.</p>-->
+<!--        {% endif %}-->
+
+<!--        <h3>Categories</h3>-->
+<!--        {% if results.categories %}-->
+<!--            <ul>-->
+<!--                {% for category in results.categories %}-->
+<!--                    <li><a href="{% url 'category_detail' category.id %}">{{ category.name }}</a></li>-->
+<!--                {% endfor %}-->
+<!--            </ul>-->
+<!--        {% else %}-->
+<!--            <p>No categories found.</p>-->
+<!--        {% endif %}-->
+
+<!--        <h3>Ingredients</h3>-->
+<!--        {% if results.ingredients %}-->
+<!--            <ul>-->
+<!--                {% for ingredient in results.ingredients %}-->
+<!--                    <li><a href="{% url 'ingredient_detail' ingredient.id %}">{{ ingredient.name }}</a></li>-->
+<!--                {% endfor %}-->
+<!--            </ul>-->
+<!--        {% else %}-->
+<!--            <p>No ingredients found.</p>-->
+<!--        {% endif %}-->
+<!--    {% else %}-->
+<!--        <p>No results found for your search query.</p>-->
+<!--    {% endif %}-->
+
+<!-- <script>-->
+<!--        // AJAX search functionality-->
+<!--        document.getElementById('search-input').addEventListener('input', function () {-->
+<!--            let query = this.value;-->
+
+<!--            if (query.length > 2) {  // Trigger search after 3 characters typed-->
+<!--                // Send the search query via AJAX-->
+<!--                fetch("{% url 'ajax_search' %}?q=" + query)-->
+<!--                    .then(response => response.json())-->
+<!--                    .then(data => {-->
+<!--                        // Display results dynamically-->
+<!--                        document.getElementById('recipes-results').innerHTML = '<h4>Recipes</h4>' +-->
+<!--                            data.recipes.map(item => `<p>${item}</p>`).join('');-->
+<!--                        document.getElementById('posts-results').innerHTML = '<h4>Posts</h4>' +-->
+<!--                            data.posts.map(item => `<p>${item}</p>`).join('');-->
+<!--                        document.getElementById('categories-results').innerHTML = '<h4>Categories</h4>' +-->
+<!--                            data.categories.map(item => `<p>${item}</p>`).join('');-->
+<!--                        document.getElementById('ingredients-results').innerHTML = '<h4>Ingredients</h4>' +-->
+<!--                            data.ingredients.map(item => `<p>${item}</p>`).join('');-->
+<!--                    })-->
+<!--                    .catch(error => console.error('Error:', error));-->
+<!--            } else {-->
+<!--                // Clear results if query is too short-->
+<!--                document.getElementById('recipes-results').innerHTML = '';-->
+<!--                document.getElementById('posts-results').innerHTML = '';-->
+<!--                document.getElementById('categories-results').innerHTML = '';-->
+<!--                document.getElementById('ingredients-results').innerHTML = '';-->
+<!--            }-->
+<!--        });-->
+<!--    </script>-->
+
+{% endblock %}

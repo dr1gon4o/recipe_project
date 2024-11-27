@@ -2,12 +2,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.views import LoginView, LogoutView
-from .models import Recipe, Chef, Post
+from .models import Recipe, Chef, Post, Ingredient, Category
 from .forms import RecipeForm, ChefForm, PostForm
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 
 # Home View - Lists all recipes on the landing page
@@ -15,7 +16,7 @@ class HomeView(ListView):
     model = Recipe
     template_name = 'home.html'
     context_object_name = 'recipes'
-    # paginate_by = 6
+    paginate_by = 6
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -242,6 +243,71 @@ class AboutView(TemplateView):
 
 class ContactView(TemplateView):
     template_name = 'contact.html'
+
+
+class RecipeListView(ListView):
+    model = Recipe
+    template_name = 'recipe_list.html'
+    context_object_name = 'recipes'
+
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'post_list.html'
+    context_object_name = 'posts'
+
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'category_list.html'
+    context_object_name = 'categories'
+
+
+class IngredientListView(ListView):
+    model = Ingredient
+    template_name = 'ingredient_list.html'
+    context_object_name = 'ingredients'
+
+
+def ajax_search(request):
+    query = request.GET.get('q', '')  # Get the search query from the GET request
+
+    # Perform the search if query exists
+    if query:
+        recipe_results = Recipe.objects.filter(title__icontains=query)
+        post_results = Post.objects.filter(comment__icontains=query)
+        category_results = Category.objects.filter(name__icontains=query)
+        ingredient_results = Ingredient.objects.filter(name__icontains=query)
+
+        # Combine the results in a dictionary
+        results = {
+            'recipes': [recipe.title for recipe in recipe_results],
+            'posts': [post.comment for post in post_results],
+            'categories': [category.name for category in category_results],
+            'ingredients': [ingredient.name for ingredient in ingredient_results],
+        }
+        return JsonResponse(results)  # Return the results as a JSON response
+
+    return JsonResponse({'error': 'No search query provided.'})
+
+
+def SearchView(request):
+    query = request.GET.get('q')
+    if query:
+        recipes = Recipe.objects.filter(title__icontains=query)
+        posts = Post.objects.filter(comment__icontains=query)
+        categories = Category.objects.filter(name__icontains=query)
+        ingredients = Ingredient.objects.filter(name__icontains=query)
+    else:
+        recipes = posts = categories = ingredients = []
+
+    return render(request, 'search_results.html', {
+        'recipes': recipes,
+        'posts': posts,
+        'categories': categories,
+        'ingredients': ingredients,
+    })
+
 
 
 # no connection to chef model or post or recipe
