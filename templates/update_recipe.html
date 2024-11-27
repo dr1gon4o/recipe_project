@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 {% if user == recipe.chef.user %}
     <h2>Update Recipe</h2>
     <form method="post" enctype="multipart/form-data">

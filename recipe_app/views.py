@@ -23,10 +23,10 @@ class HomeView(ListView):
         return context
 
 
-class CreateOrUpdateChefProfileView(LoginRequiredMixin, CreateView, UpdateView):
+class CreateChefProfileView(LoginRequiredMixin, CreateView):
     model = Chef
     form_class = ChefForm
-    template_name = 'create_or_update_chef_profile.html'
+    template_name = 'create_chef_profile.html'
     # success_url = reverse_lazy('profile')
 
     def get_object(self):
@@ -49,7 +49,6 @@ class CreateOrUpdateChefProfileView(LoginRequiredMixin, CreateView, UpdateView):
         return reverse_lazy('profile')
 
 
-# Profile View - to show the user's profile page
 class ProfileView(DetailView):
     model = Chef
     template_name = 'profile.html'
@@ -60,13 +59,13 @@ class ProfileView(DetailView):
         try:
             return self.request.user.chef
         except Chef.DoesNotExist:
-            return redirect('create_or_update_chef_profile')
+            return redirect('create_chef_profile')
 
 
     # def get_object(self):
     #     return self.request.user.chef  # Fetch the Chef profile for the logged-in user
 
-# Profile Update View - to allow the user to edit their profile
+
 class ProfileUpdateView(UpdateView):
     model = Chef
     form_class = ChefForm
@@ -81,7 +80,6 @@ class ProfileUpdateView(UpdateView):
         return reverse_lazy('profile')  # Redirect to the profile view after successful update
 
 
-# User Registration (Create user using CBV)
 class RegisterView(CreateView):
     form_class = UserCreationForm
     template_name = 'register.html'
@@ -91,7 +89,7 @@ class RegisterView(CreateView):
         messages.success(self.request, f"Account created for {form.cleaned_data['username']}!")
         return super().form_valid(form)
 
-# User Login (Using Django's built-in LoginView)
+
 class LoginUserView(LoginView):
     template_name = 'login.html'
     # success_url = reverse_lazy('profile')
@@ -100,7 +98,6 @@ class LoginUserView(LoginView):
         return reverse_lazy('profile')
 
 
-# User Logout (Using Django's built-in LogoutView)
 class LogoutUserView(LogoutView):
     next_page = '/'  # Redirect to home after logout
     # success_url = reverse_lazy('logout')
@@ -109,7 +106,7 @@ class LogoutUserView(LogoutView):
     # def get_success_url(self):
     #     return reverse_lazy('home')
 
-# Recipe Create (Create a new recipe with CBV)
+
 class RecipeCreateView(CreateView):
     model = Recipe
     form_class = RecipeForm
@@ -147,7 +144,7 @@ class RecipeCreateView(CreateView):
         return reverse_lazy('home')  # Redirect to home after successful recipe creation
         # return reverse_lazy('view_recipe', kwargs={'pk': self.object.pk})
 
-# Recipe Update (Update an existing recipe with CBV)
+
 class RecipeUpdateView(UpdateView):
     model = Recipe
     form_class = RecipeForm
@@ -172,25 +169,25 @@ class RecipeUpdateView(UpdateView):
         return reverse_lazy('home')  # Redirect to home after successful update
         # return reverse_lazy('view_recipe', kwargs={'pk': self.object.pk})
 
-# Recipe Delete (Delete a recipe with CBV)
+
 class RecipeDeleteView(DeleteView):
     model = Recipe
     template_name = 'delete_recipe.html'
     context_object_name = 'recipe'
     # success_url = reverse_lazy('home')
 
-    def get_queryset(self):
-        # return Recipe.objects.filter(chef=self.request.user)  # Only allow deleting recipes created by the logged-in user
-        queryset = Recipe.objects.filter(chef=self.request.user)
-        if not queryset.exists():
-            raise PermissionDenied("You do not have permission to edit or delete this recipe.")
-        return queryset
+    # def get_queryset(self):
+    #     # return Recipe.objects.filter(chef=self.request.user)  # Only allow deleting recipes created by the logged-in user
+    #     queryset = Recipe.objects.filter(chef=self.request.user)
+    #     if not queryset.exists():
+    #         raise PermissionDenied("You do not have permission to edit or delete this recipe.")
+    #     return queryset
 
     def get_success_url(self):
         messages.success(self.request, 'Recipe deleted successfully!')
         return reverse_lazy('home')  # Redirect to home after successful deletion
 
-# Recipe Detail (View the details of a single recipe)
+
 class RecipeDetailView(DetailView):
     model = Recipe
     template_name = 'view_recipe.html'

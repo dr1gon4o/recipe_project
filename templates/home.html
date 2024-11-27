@@ -11,13 +11,11 @@
                     {% for recipe in recipes %}
                         <div class="col-md-12 mb-3">
                             <div class="card">
-                                <!-- Uncomment the following line if you have images -->
                                 <!-- <img src="{{ recipe.image.url }}" class="card-img-top" alt="Recipe Image"> -->
                                 <div class="card-body">
                                     <h5 class="card-title">{{ recipe.title }}</h5>
                                     <p class="card-text">{{ recipe.description }}</p>
                                     <a href="{% url 'view_recipe' recipe.pk %}" class="btn btn-primary">View Recipe</a>
-
                                     <a href="{% url 'update_recipe' recipe.pk %}" class="btn btn-secondary">Update Recipe</a>
                                     {% if user == recipe.chef.user %}
                                     <a href="{% url 'delete_recipe' recipe.pk %}" class="btn btn-danger">Delete Recipe</a>
