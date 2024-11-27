@@ -49,7 +49,7 @@
                                     <a href="{% url 'view_post' post.pk %}" class="btn btn-primary">View Post</a>
 
                                     <a href="{% url 'update_post' post.pk %}" class="btn btn-secondary">Update Post</a>
-                                    {% if user == post.recipe.chef.user %}
+                                    {% if user == post.user %}
                                     <a href="{% url 'delete_post' post.pk %}" class="btn btn-danger">Delete Post</a>
                                     {% endif %}
                                 </div>
