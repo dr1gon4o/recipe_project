@@ -16,23 +16,31 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{% url 'home' %}">Recipe Project</a>
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <i class="fas fa-utensils"></i> Recipe Project
+        </a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'create_recipe' %}">Create Recipe</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'create_post' %}">Create Post</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">
+                        <i class="fas fa-user"></i> Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'create_recipe' %}">
+                        <i class="fas fa-plus-circle"></i> Create Recipe</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'create_post' %}">
+                        <i class="fas fa-edit"></i>Create Post</a></li>
                     <li class="nav-item">
                         <form action="{% url 'logout' %}" method="post" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-link nav-link">Logout</button>
+                            <button type="submit" class="btn btn-link nav-link">
+                                <i class="fas fa-sign-out-alt"></i> Logout</button>
                         </form>
                     </li>
 
                 {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">
+                        <i class="fas fa-sign-in-alt"></i> Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">
+                        <i class="fas fa-user-plus"></i> Register</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -66,11 +74,16 @@
 
                 <div class="col-md-2">
                     <div class="list-group">
-                        <a href="{% url 'recipe_list' %}" class="list-group-item list-group-item-action">Recipes</a>
-                        <a href="{% url 'post_list' %}" class="list-group-item list-group-item-action">Posts</a>
-                        <a href="{% url 'category_list' %}" class="list-group-item list-group-item-action">Categories</a>
-                        <a href="{% url 'ingredient_list' %}" class="list-group-item list-group-item-action">Ingredients</a>
-                        <a href="{% url 'search' %}" class="list-group-item list-group-item-action">Search</a>
+                        <a href="{% url 'recipe_list' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-book-open"></i> Recipes</a>
+                        <a href="{% url 'post_list' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-comment"></i> Posts</a>
+                        <a href="{% url 'category_list' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-th-list"></i> Categories</a>
+                        <a href="{% url 'ingredient_list' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-carrot"></i> Ingredients</a>
+                        <a href="{% url 'search' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-search"></i> Search</a>
                         <a <form id="search-form" method="GET">
 <!--                                <input type="text" id="search-input" class="form-control" placeholder="Search..." />-->
                                 <input type="text" class="search-input form-control" placeholder="Search..." />
