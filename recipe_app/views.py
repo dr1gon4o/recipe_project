@@ -2,8 +2,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.views import LoginView, LogoutView
 from .models import Recipe, Chef, Post, Ingredient, Category
@@ -11,7 +13,6 @@ from .forms import RecipeForm, ChefForm, PostForm
 from django.shortcuts import redirect, render
 
 
-# Home View - Lists all recipes on the landing page
 class HomeView(ListView):
     model = Recipe
     template_name = 'home.html'
@@ -20,7 +21,16 @@ class HomeView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['posts'] = Post.objects.all()  # Add posts to the context
+
+        # Paginate posts
+        post_list = Post.objects.all()
+        # recipe_list = Recipe.object.all()
+        post_paginator = Paginator(post_list, 6)  # Set the number of posts per page
+        page_number = self.request.GET.get('post_page')  # Get the page number for posts
+        post_page_obj = post_paginator.get_page(page_number)
+
+        # context['posts'] = Post.objects.all()  # Add posts to the context
+        context['posts'] = post_page_obj  # Pass paginated posts to the context
         return context
 
 
@@ -308,6 +318,37 @@ def SearchView(request):
         'ingredients': ingredients,
     })
 
+
+class PaginatedRecipesView(View):
+    def get(self, request, *args, **kwargs):
+        # Get all recipes
+        recipe_list = Recipe.objects.all()
+
+        # Pagination setup: 6 recipes per page
+        paginator = Paginator(recipe_list, 6)
+        page_number = request.GET.get('page', 1)  # Default to page 1 if not provided
+        page_obj = paginator.get_page(page_number)
+
+        # Prepare the data to send back
+        recipes_data = [{
+            'id': recipe.id,
+            'title': recipe.title,
+            'description': recipe.description,
+            # 'created_at': recipe.created_at,
+            # 'image_url': recipe.image.url if recipe.image else None,  # Optional image
+        } for recipe in page_obj]
+
+        # Pagination metadata
+        pagination_data = {
+            'current_page': page_obj.number,
+            'total_pages': paginator.num_pages,
+            'has_previous': page_obj.has_previous(),
+            'has_next': page_obj.has_next(),
+            'total_items': paginator.count,
+            'recipes': recipes_data
+        }
+
+        return JsonResponse(pagination_data)
 
 
 # no connection to chef model or post or recipe

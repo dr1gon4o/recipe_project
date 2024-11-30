@@ -3,6 +3,7 @@
 {% block content %}
     <nav><h1>Recipe List</h1>
     <div class="row">
+
         {% for recipe in recipes %}
             <div class="col-md-4">
                 <div class="card">
@@ -36,4 +37,6 @@
         {% endfor %}
     </div>
     </nav>
+
+
 {% endblock %}

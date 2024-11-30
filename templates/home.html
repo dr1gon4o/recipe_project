@@ -26,14 +26,38 @@
                         </div>
                     {% endfor %}
                 </div>
-                <!-- Pagination for recipes -->
-                <div class="pagination">
-                    {{ recipes.paginator.num_pages }} pages
-                    {% for page_num in recipes.paginator.page_range %}
-                        <a href="?page={{ page_num }}">{{ page_num }}</a>
-                    {% endfor %}
+
+                <div class="container">
+                  <nav>
+                    <ul class="pagination">
+                      <li class="page-item"><a href="?recipe_page={{ recipes.previous_page_number }}" class="page-link">Previous</a></li>
+                      <li class="page-item"><a href="?page=1" class="page-link">1</a></li>
+                      <li class="page-item"><a href="?page=2" class="page-link">2</a></li>
+                      <li class="page-item"><a href="?page=3" class="page-link">3</a></li>
+                      <li class="page-item"><a href="?page=4" class="page-link">4</a></li>
+                      <li class="page-item"><a href="?page=5" class="page-link">5</a></li>
+                      <li class="page-item"><a href="?recipe_page={{ recipes.paginator.num_pages }}" class="page-link">Next</a></li>
+                    </ul>
+                  </nav>
                 </div>
+                <!-- Pagination for recipes -->
+<!--                <div class="container">-->
+<!--                  <nav>-->
+<!--                    <ul class="pagination">-->
+<!--                        {% if recipes.has_previous %}-->
+<!--                          <li class="page-item"><a href="?recipe_page=1" class="page-link">First</a></li>-->
+<!--                          <li class="page-item"><a href="?recipe_page={{ recipes.previous_page_number }}" class="page-link">Previous</a></li>-->
+<!--                        {% endif %}-->
+<!--                            <li class="page-item"><a href="?page=1" class="page-link">Page {{ recipes.number }} of {{ recipes.paginator.num_pages }}</a></li>-->
+<!--                        {% if recipes.has_next %}-->
+<!--                          <li class="page-item"><a href="?recipe_page={{ recipes.next_page_number }}" class="page-link">Next</a></li>-->
+<!--                          <li class="page-item"><a href="?recipe_page={{ recipes.paginator.num_pages }}" class="page-link">Last</a></li>-->
+<!--                        {% endif %}-->
+<!--                    </ul>-->
+<!--                  </nav>-->
+<!--                </div>-->
             </div>
+
 
             <!-- Posts List -->
             <div class="col-md-6">
@@ -57,14 +81,36 @@
                     {% endfor %}
                 </div>
                 <!-- Pagination for posts -->
-                <div class="pagination">
-                    {{ posts.paginator.num_pages }} pages
-                    {% for page_num in posts.paginator.page_range %}
-                        <a href="?page={{ page_num }}">{{ page_num }}</a>
-                    {% endfor %}
+<!--                <div class="pagination">-->
+<!--                    {% if posts.has_previous %}-->
+<!--                        <a href="?post_page=1">-First-</a>-->
+<!--                        <a href="?post_page={{ posts.previous_page_number }}">-Previous-</a>-->
+<!--                    {% endif %}-->
+<!--                    <span>Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>-->
+<!--                    {% if posts.has_next %}-->
+<!--                        <a href="?post_page={{ posts.next_page_number }}">-Next-</a>-->
+<!--                        <a href="?post_page={{ posts.paginator.num_pages }}">-Last-</a>-->
+<!--                    {% endif %}-->
+<!--                </div>-->
+                <div class="container">
+                  <nav>
+                    <ul class="pagination">
+                        {% if posts.has_previous %}
+                          <li class="page-item"><a href="?post_page=1" class="page-link">First</a></li>
+                          <li class="page-item"><a href="?post_page={{ posts.previous_page_number }}" class="page-link">Previous</a></li>
+                        {% endif %}
+                            <li class="page-item"><a href="?page=1" class="page-link">Page {{ posts.number }} of {{ posts.paginator.num_pages }}</a></li>
+                        {% if posts.has_next %}
+                          <li class="page-item"><a href="?post_page={{ posts.next_page_number }}" class="page-link">Next</a></li>
+                          <li class="page-item"><a href="?post_page={{ posts.paginator.num_pages }}" class="page-link">Last</a></li>
+                        {% endif %}
+                    </ul>
+                  </nav>
                 </div>
+
             </div>
         </div>
+
         {% else %}
         <h2> Welcome to our recipe project</h2>
         <div> You are a chef and want to share your creative recipe ideas?
@@ -72,7 +118,7 @@
         <br>
         <nav>You are a chef and want to share your creative recipe ideas?
             <br>try the register button and join us to begin your journey </br></nav>
-        <a href=""></a>
+<!--        <a href="{% url 'register' %}" <button class="btn btn-info"> </button> Register here </a>-->
         {% endif %}
     </div>
 
