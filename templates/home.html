@@ -113,12 +113,19 @@
 
         {% else %}
         <h2> Welcome to our recipe project</h2>
-        <div> You are a chef and want to share your creative recipe ideas?
-             <br>join us today and try that sweet register button </br> </div>
-        <br>
-        <nav>You are a chef and want to share your creative recipe ideas?
-            <br>try the register button and join us to begin your journey </br></nav>
-<!--        <a href="{% url 'register' %}" <button class="btn btn-info"> </button> Register here </a>-->
+        <div>
+            <nav>You are a chef and want to share your creative recipe ideas?
+                 <br>
+                join us today and try that sweet register button
+            </nav>
+                <br>
+            <nav>Discover new recipes, share your own, and connect with other chefs
+                <br>
+                Try the register button and join us to begin your journey
+                <br>
+                <a href="{% url 'register' %}" <button class="btn btn-info"> </button> Register here </a>
+            </nav>
+        </div>
         {% endif %}
     </div>
 
