@@ -9,13 +9,15 @@
         <button type="submit" class="btn btn-danger">Yes, Delete</button>
         <a href="{% url 'view_recipe' recipe.pk %}" class="btn btn-secondary">Cancel</a>
     </form>
-<br>
-  <a href="{% url 'home' %}">Back to Home</a>
+    <br>
+<!--        <a href="{% url 'home' %}">Back to Home</a>-->
+        <a href="{% url 'home' %}"><button type="button" class="btn btn-outline-info btn-sm">Back to Home</button></a>
 {% else %}
-<h2>You need to be the owner of the recipe to be able to delete this Recipe</h2>
-<br>
-<a href="{% url 'create_recipe' %}" class="btn btn-success">Create your Recipe</a>
-<br>
-<a href="{% url 'home' %}">Back to Home</a>
+    <h2>You need to be the owner of the recipe to be able to delete this Recipe</h2>
+    <br>
+    <a href="{% url 'create_recipe' %}" class="btn btn-success">Create your Recipe</a>
+    <br>
+<!--    <a href="{% url 'home' %}">Back to Home</a>-->
+    <a href="{% url 'home' %}"><button type="button" class="btn btn-outline-info btn-sm">Back to Home</button></a>
 {% endif %}
 {% endblock %}

@@ -34,27 +34,37 @@ class HomeView(ListView):
         return context
 
 
+
+
 class CreateChefProfileView(LoginRequiredMixin, CreateView):
     model = Chef
     form_class = ChefForm
     template_name = 'create_chef_profile.html'
     # success_url = reverse_lazy('profile')
 
-    def get_object(self):
-        """
-        Try to fetch the Chef profile of the current user.
-        If no Chef profile exists, create a new one.
-        """
-        try:
-            return self.request.user.chef  # Try to get the user's Chef profile
-        except Chef.DoesNotExist:
-            return None  # If no Chef profile, return None (will create new in form_valid())
+    # def get_object(self):
+    #     """
+    #     Try to fetch the Chef profile of the current user.
+    #     If no Chef profile exists, create a new one.
+    #     """
+    #     try:
+    #         return self.request.user.chef  # Try to get the user's Chef profile
+    #     except Chef.DoesNotExist:
+    #         return None  # If no Chef profile, return None (will create new in form_valid())
+
+    # def form_valid(self, form):
+    #     # If the Chef profile doesn't exist, it will be created
+    #     if not self.get_object():
+    #         form.instance.user = self.request.user.chef  # Link the new Chef profile to the user
+    #     return super().form_valid(form)
 
     def form_valid(self, form):
-        # If the Chef profile doesn't exist, it will be created
-        if not self.get_object():
-            form.instance.user = self.request.user.chef  # Link the new Chef profile to the user
+        # If the Chef profile doesn't exist, create it
+        if not hasattr(self.request.user, 'chef'):
+            form.instance.user = self.request.user  # Link the new Chef profile to the user
         return super().form_valid(form)
+
+
 
     def get_success_url(self):
         return reverse_lazy('profile')
@@ -111,6 +121,7 @@ class LoginUserView(LoginView):
 
 class LogoutUserView(LogoutView):
     next_page = '/'  # Redirect to home after logout
+    # template_name = 'logout.html'
     # success_url = reverse_lazy('logout')
     # def get_success_url(self):
     #     return reverse_lazy('logout')
@@ -127,7 +138,7 @@ class RecipeCreateView(CreateView):
 
         if not self.request.user.chef:
             messages.error(self.request, "You need to create a Chef profile first.")
-            return redirect('create_or_update_chef_profile')  # Redirect to the Chef profile creation page
+            return redirect('create_chef_profile')  # Redirect to the Chef profile creation page
         # Get or create the Chef instance linked to the logged-in user
         chef = self.request.user.chef  # Access the Chef instance associated with the current User
         # Assign the Chef instance to the recipe's chef field
@@ -319,36 +330,36 @@ def SearchView(request):
     })
 
 
-class PaginatedRecipesView(View):
-    def get(self, request, *args, **kwargs):
-        # Get all recipes
-        recipe_list = Recipe.objects.all()
-
-        # Pagination setup: 6 recipes per page
-        paginator = Paginator(recipe_list, 6)
-        page_number = request.GET.get('page', 1)  # Default to page 1 if not provided
-        page_obj = paginator.get_page(page_number)
-
-        # Prepare the data to send back
-        recipes_data = [{
-            'id': recipe.id,
-            'title': recipe.title,
-            'description': recipe.description,
-            # 'created_at': recipe.created_at,
-            # 'image_url': recipe.image.url if recipe.image else None,  # Optional image
-        } for recipe in page_obj]
-
-        # Pagination metadata
-        pagination_data = {
-            'current_page': page_obj.number,
-            'total_pages': paginator.num_pages,
-            'has_previous': page_obj.has_previous(),
-            'has_next': page_obj.has_next(),
-            'total_items': paginator.count,
-            'recipes': recipes_data
-        }
-
-        return JsonResponse(pagination_data)
+# class PaginatedRecipesView(View):
+#     def get(self, request, *args, **kwargs):
+#         # Get all recipes
+#         recipe_list = Recipe.objects.all()
+#
+#         # Pagination setup: 6 recipes per page
+#         paginator = Paginator(recipe_list, 6)
+#         page_number = request.GET.get('page', 1)  # Default to page 1 if not provided
+#         page_obj = paginator.get_page(page_number)
+#
+#         # Prepare the data to send back
+#         recipes_data = [{
+#             'id': recipe.id,
+#             'title': recipe.title,
+#             'description': recipe.description,
+#             # 'created_at': recipe.created_at,
+#             # 'image_url': recipe.image.url if recipe.image else None,  # Optional image
+#         } for recipe in page_obj]
+#
+#         # Pagination metadata
+#         pagination_data = {
+#             'current_page': page_obj.number,
+#             'total_pages': paginator.num_pages,
+#             'has_previous': page_obj.has_previous(),
+#             'has_next': page_obj.has_next(),
+#             'total_items': paginator.count,
+#             'recipes': recipes_data
+#         }
+#
+#         return JsonResponse(pagination_data)
 
 
 # no connection to chef model or post or recipe

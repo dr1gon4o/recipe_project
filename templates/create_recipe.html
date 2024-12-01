@@ -9,12 +9,14 @@
         <button type="submit" class="btn btn-success">Create Recipe</button>
     </form>
   <br>
-  <a href="{% url 'home' %}">Back to Home</a>
+<!--  <a href="{% url 'home' %}">Back to Home</a>-->
+    <a href="{% url 'home' %}"><button type="button" class="btn btn-outline-info btn-sm">Back to Home</button></a>
 {% else %}
-<h2>You need to create a Chef profile first to be able to Create Recipe</h2>
-<br>
-<a href="{% url 'create_chef_profile' %}" class="btn btn-success">Create Chef Profile</a>
-<br>
-<a href="{% url 'home' %}">Back to Home</a>
+    <h2>You need to create a Chef profile first to be able to Create Recipe</h2>
+    <br>
+    <a href="{% url 'create_chef_profile' %}" class="btn btn-success">Create Chef Profile</a>
+    <br>
+<!--    <a href="{% url 'home' %}">Back to Home</a>-->
+    <a href="{% url 'home' %}"><button type="button" class="btn btn-outline-info btn-sm">Back to Home</button></a>
 {% endif %}
 {% endblock %}

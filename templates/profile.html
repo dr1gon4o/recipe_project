@@ -9,13 +9,17 @@
         <a href="{% url 'update_profile' %}" class="btn btn-primary">Update Chef Profile</a>
     <!--    <a href="edit" class="btn btn-primary">Edit</a>-->
         <br>
-        <a href="{% url 'home' %}">Back to Home</a>
+        <br>
+<!--        <a href="{% url 'home' %}">Back to Home</a>-->
+        <a href="{% url 'home' %}"><button type="button" class="btn btn-outline-info btn-sm">Back to Home</button></a>
     {% else %}
         <h2>{{ user.username }}'s Profile</h2>
         <p><strong>Bio:</strong> {{ chef.bio }}</p>
         <a href="{% url 'create_chef_profile' %}" class="btn btn-primary">Create Chef Profile</a>
         <br>
-        <a href="{% url 'home' %}">Back to Home</a>
+        <br>
+<!--        <a href="{% url 'home' %}">Back to Home</a>-->
+        <a href="{% url 'home' %}" class="btn btn-outline-info btn-sm">Back to Home</a>
     {% endif %}
 
 {% endblock %}

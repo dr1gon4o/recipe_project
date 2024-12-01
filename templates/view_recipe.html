@@ -18,10 +18,14 @@
         {% endfor %}
     </ul>
     <p><strong>Chef:</strong> {{ recipe.chef }}
-        <a href=""> view chef's profile</a></p>
+        <a href=""> <button type="button" class="btn btn-outline-light btn-sm">view chef's profile</button></a></p>
 
-    {% if recipe.chef == user %}
-        <a href="{% url 'update_recipe' recipe.pk %}" class="btn btn-primary">Edit Recipe</a>
-        <a href="{% url 'delete_recipe' recipe.pk %}" class="btn btn-danger">Delete Recipe</a>
+    {% if user == recipe.chef.user %}
+        <nav>
+        <a href="{% url 'update_recipe' recipe.pk %}" class="btn btn-outline-primary btn-sm">Edit Recipe</a> |
+            <a href="{% url 'delete_recipe' recipe.pk %}" class="btn btn-outline-danger btn-sm">Delete Recipe</a>
+        </nav>
     {% endif %}
+    <br>
+    <a href="{% url 'home' %}" class="btn btn-outline-info btn-sm">Back to Home</a>
 {% endblock %}

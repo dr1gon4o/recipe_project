@@ -9,14 +9,16 @@
             <button type="submit" class="btn btn-warning">Update Post</button>
         </form>
          <br>
-        <a href="{% url 'home' %}">Back to Home</a>
+<!--        <a href="{% url 'home' %}">Back to Home</a>-->
+        <a href="{% url 'home' %}"><button type="button" class="btn btn-outline-info btn-sm">Back to Home</button></a>
 
     {% else %}
         <h2>In order to update this post, you must be the Post's owner.</h2>
         <br>
         <a href="{% url 'create_post' %}" class="btn btn-success">Create Post</a>
         <br>
-        <a href="{% url 'home' %}">Back to Home</a>
+<!--        <a href="{% url 'home' %}">Back to Home</a>-->
+        <a href="{% url 'home' %}"><button type="button" class="btn btn-outline-info btn-sm">Back to Home</button></a>
     {% endif %}
 {% endblock %}
 

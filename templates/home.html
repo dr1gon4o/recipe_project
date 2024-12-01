@@ -16,10 +16,10 @@
                                 <div class="card-body">
                                     <h5 class="card-title">{{ recipe.title }}</h5>
                                     <p class="card-text">{{ recipe.description }}</p>
-                                    <a href="{% url 'view_recipe' recipe.pk %}" class="btn btn-primary">View Recipe</a>
-                                    <a href="{% url 'update_recipe' recipe.pk %}" class="btn btn-secondary">Update Recipe</a>
+                                    <a href="{% url 'view_recipe' recipe.pk %}" class="btn btn-primary btn-sm">View Recipe</a>
+                                    <a href="{% url 'update_recipe' recipe.pk %}" class="btn btn-secondary btn-sm">Update Recipe</a>
                                     {% if user == recipe.chef.user %}
-                                    <a href="{% url 'delete_recipe' recipe.pk %}" class="btn btn-danger">Delete Recipe</a>
+                                    <a href="{% url 'delete_recipe' recipe.pk %}" class="btn btn-danger btn-sm">Delete Recipe</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -69,11 +69,11 @@
                                 <div class="card-body">
                                     <h5 class="card-title">{{ post.recipe.title }}</h5>
                                     <p class="card-text">{{ post.comment }}</p>
-                                    <a href="{% url 'view_post' post.pk %}" class="btn btn-primary">View Post</a>
+                                    <a href="{% url 'view_post' post.pk %}" class="btn btn-primary btn-sm">View Post</a>
 
-                                    <a href="{% url 'update_post' post.pk %}" class="btn btn-secondary">Update Post</a>
+                                    <a href="{% url 'update_post' post.pk %}" class="btn btn-secondary btn-sm">Update Post</a>
                                     {% if user == post.user %}
-                                    <a href="{% url 'delete_post' post.pk %}" class="btn btn-danger">Delete Post</a>
+                                    <a href="{% url 'delete_post' post.pk %}" class="btn btn-danger btn-sm">Delete Post</a>
                                     {% endif %}
                                 </div>
                             </div>

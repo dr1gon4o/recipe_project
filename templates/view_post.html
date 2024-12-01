@@ -6,8 +6,14 @@
   <p><strong>Comment:</strong></p>
   <p>{{ post.comment }}</p>
 
-  <p><a href="{% url 'update_post' post.pk %}">Edit Post</a> | <a href="{% url 'delete_post' post.pk %}">Delete Post</a></p>
-
+  {% if user == post.user %}
+    <nav>
+      <a href="{% url 'update_post' post.pk %}" class="btn btn-outline-primary btn-sm">Edit Post</a> |
+      <a href="{% url 'delete_post' post.pk %}" class="btn btn-outline-danger btn-sm">Delete Post</a>
+    </nav>
+  {% endif %}
   <br>
-  <a href="{% url 'home' %}">Back to Home</a>
+<!--  <a href="{% url 'home' %}">Back to Home</a>-->
+  <a href="{% url 'home' %}" class="btn btn-outline-info btn-sm">Back to Home</a>
+
 {% endblock %}

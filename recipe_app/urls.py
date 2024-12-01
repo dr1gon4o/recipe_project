@@ -1,9 +1,10 @@
-# urls.py
+from django.contrib import admin
 from django.urls import path
 from . import views
 
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('', views.HomeView.as_view(), name='home'),
 
     path('register/', views.RegisterView.as_view(), name='register'),
@@ -32,7 +33,7 @@ urlpatterns = [
     path('ingredients/', views.IngredientListView.as_view(), name='ingredient_list'),
 
     path('ajax_search/', views.ajax_search, name='ajax_search'),
-    path('recipes/json/', views.PaginatedRecipesView.as_view(), name='recipes_json'),
+    # path('recipes/json/', views.PaginatedRecipesView.as_view(), name='recipes_json'),
     path('search/', views.SearchView, name='search'),
 
     path('about/', views.AboutView.as_view(), name='about'),

@@ -1,9 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% block title %}logout{% endblock %}
-    <a> you are logged out </a>
-    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">home</a></li>
-    <button type="submit" class="btn btn-primary">go back home</button>
-    <a> href="{% url 'home' %}" </a>
+
+    <div>
+        <nav>
+            <h3> You are logged out </h3>
+            <p> Thank you for using our site </p>
+            <a href="{% url 'home' %}" class="nav-link btn btn-primary">Go back home</a>
+        </nav>
+        <nav>
+            <h3> Want to log in again? </h3>
+            <p> click the login button to log in </p>
+            <a href="{% url 'home' %}" class="nav-link btn btn-primary">Log in again</a>
+        </nav>
+
+    </div>
+
 {% endblock %}
