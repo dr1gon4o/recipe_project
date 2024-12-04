@@ -1,23 +1,21 @@
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.urls import reverse_lazy
-from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.views import LoginView, LogoutView
 from .models import Recipe, Chef, Post, Ingredient, Category
-from .forms import RecipeForm, ChefForm, PostForm
-from django.shortcuts import redirect, render
+from .forms import RecipeForm, ChefForm, PostForm, PostEditForm, RecipeEditForm, ChefEditForm, UserRegistrationForm
+from django.shortcuts import redirect, render, get_object_or_404
 
 
 class HomeView(ListView):
     model = Recipe
     template_name = 'home.html'
     context_object_name = 'recipes'
-    paginate_by = 6
+    paginate_by = 7
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -34,13 +32,11 @@ class HomeView(ListView):
         return context
 
 
-
-
 class CreateChefProfileView(LoginRequiredMixin, CreateView):
     model = Chef
     form_class = ChefForm
     template_name = 'create_chef_profile.html'
-    # success_url = reverse_lazy('profile')
+    success_url = reverse_lazy('profile')
 
     # def get_object(self):
     #     """
@@ -64,32 +60,62 @@ class CreateChefProfileView(LoginRequiredMixin, CreateView):
             form.instance.user = self.request.user  # Link the new Chef profile to the user
         return super().form_valid(form)
 
+    # def get_success_url(self):
+    #     return reverse_lazy('profile')
 
 
-    def get_success_url(self):
-        return reverse_lazy('profile')
-
-
-class ProfileView(DetailView):
-    model = Chef
-    template_name = 'profile.html'
-    context_object_name = 'chef'
-
-    def get_object(self):
-        # Return the Chef profile of the logged-in user, or raise a 404 if it doesn't exist
-        try:
-            return self.request.user.chef
-        except Chef.DoesNotExist:
-            return redirect('create_chef_profile')
-
+# class ProfileView(DetailView):
+#     model = Chef
+#     template_name = 'profile.html'
+#     context_object_name = 'chef'
+#
+#     def get_object(self):
+#         # Return the Chef profile of the logged-in user, or raise a 404 if it doesn't exist
+#         try:
+#             return self.request.user.chef
+#         except Chef.DoesNotExist:
+#             return redirect('create_chef_profile')
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         # Fetch recipes created by this chef
+#         context['recipes'] = Recipe.objects.filter(chef=self.get_object())
+#         return context
 
     # def get_object(self):
     #     return self.request.user.chef  # Fetch the Chef profile for the logged-in user
 
+class ProfileView(TemplateView):
+    template_name = 'profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # # Check if the user has a Chef profile
+        # chef = getattr(self.request.user, 'chef', None)
+        # context['chef'] = chef  # Pass Chef object or None to the template
+        #
+        # # If the user has a Chef, fetch their recipes
+        # if chef:
+        #     context['recipes'] = Recipe.objects.filter(chef=chef)
+        # else:
+        #     context['recipes'] = None  # No recipes for users without a Chef profile
+        # return context
+
+        # Fetch chef by ID if provided, otherwise default to the logged-in user
+        chef_id = self.kwargs.get('chef_id')
+        if chef_id:
+            chef = get_object_or_404(Chef, id=chef_id)
+        else:
+            chef = getattr(self.request.user, 'chef', None)
+
+        context['chef'] = chef
+        context['recipes'] = Recipe.objects.filter(chef=chef) if chef else None
+        return context
+
 
 class ProfileUpdateView(UpdateView):
     model = Chef
-    form_class = ChefForm
+    form_class = ChefEditForm
     template_name = 'update_profile.html'
     context_object_name = 'chef'
     # success_url = reverse_lazy('profile')
@@ -102,7 +128,8 @@ class ProfileUpdateView(UpdateView):
 
 
 class RegisterView(CreateView):
-    form_class = UserCreationForm
+    # form_class = UserCreationForm
+    form_class = UserRegistrationForm
     template_name = 'register.html'
     success_url = reverse_lazy('login')
 
@@ -116,7 +143,8 @@ class LoginUserView(LoginView):
     # success_url = reverse_lazy('profile')
 
     def get_success_url(self):
-        return reverse_lazy('profile')
+        # return reverse_lazy('profile')
+        return reverse_lazy('home')
 
 
 class LogoutUserView(LogoutView):
@@ -133,6 +161,7 @@ class RecipeCreateView(CreateView):
     model = Recipe
     form_class = RecipeForm
     template_name = 'create_recipe.html'
+    success_url = reverse_lazy('home')
 
     def form_valid(self, form):
 
@@ -162,16 +191,17 @@ class RecipeCreateView(CreateView):
     #     messages.success(self.request, 'Recipe created successfully!')
     #     return response
 
-    def get_success_url(self):
-        return reverse_lazy('home')  # Redirect to home after successful recipe creation
-        # return reverse_lazy('view_recipe', kwargs={'pk': self.object.pk})
+    # def get_success_url(self):
+    #     return reverse_lazy('home')  # Redirect to home after successful recipe creation
+    #     # return reverse_lazy('view_recipe', kwargs={'pk': self.object.pk})
 
 
 class RecipeUpdateView(UpdateView):
     model = Recipe
-    form_class = RecipeForm
+    form_class = RecipeEditForm
     template_name = 'update_recipe.html'
-    # success_url = reverse_lazy('home')
+    success_url = reverse_lazy('home')
+    # success_url = reverse_lazy('view_recipe', kwargs={'pk': self.object.pk})
 
     # def get_queryset(self):
     #     # return Recipe.objects.filter(chef=self.request.user)  # Only allow deleting recipes created by the logged-in user
@@ -187,8 +217,8 @@ class RecipeUpdateView(UpdateView):
         messages.success(self.request, 'Recipe updated successfully!')
         return response
 
-    def get_success_url(self):
-        return reverse_lazy('home')  # Redirect to home after successful update
+    # def get_success_url(self):
+    #     return reverse_lazy('home')  # Redirect to home after successful update
         # return reverse_lazy('view_recipe', kwargs={'pk': self.object.pk})
 
 
@@ -196,7 +226,7 @@ class RecipeDeleteView(DeleteView):
     model = Recipe
     template_name = 'delete_recipe.html'
     context_object_name = 'recipe'
-    # success_url = reverse_lazy('home')
+    success_url = reverse_lazy('home')
 
     # def get_queryset(self):
     #     # return Recipe.objects.filter(chef=self.request.user)  # Only allow deleting recipes created by the logged-in user
@@ -205,9 +235,9 @@ class RecipeDeleteView(DeleteView):
     #         raise PermissionDenied("You do not have permission to edit or delete this recipe.")
     #     return queryset
 
-    def get_success_url(self):
-        messages.success(self.request, 'Recipe deleted successfully!')
-        return reverse_lazy('home')  # Redirect to home after successful deletion
+    # def get_success_url(self):
+    #     messages.success(self.request, 'Recipe deleted successfully!')
+    #     return reverse_lazy('home')  # Redirect to home after successful deletion
 
 
 class RecipeDetailView(DetailView):
@@ -221,6 +251,7 @@ class PostCreateView(CreateView):
     form_class = PostForm
     template_name = 'create_post.html'
     context_object_name = 'post'
+    success_url = reverse_lazy('home')
 
     def form_valid(self, form):
         # Optionally, you can add user-specific behavior, like linking the post to a user or chef
@@ -229,27 +260,29 @@ class PostCreateView(CreateView):
         form.save()
         return super().form_valid(form)
 
-    def get_success_url(self):
-        return reverse_lazy('home')  # Redirect to home or a post listing page after creating a post
+    # def get_success_url(self):
+    #     return reverse_lazy('home')  # Redirect to home or a post listing page after creating a post
+
 
 class PostUpdateView(UpdateView):
     model = Post
-    form_class = PostForm
+    form_class = PostEditForm
     template_name = 'update_post.html'
     context_object_name = 'post'
+    success_url = reverse_lazy('home')
 
-
-    def get_success_url(self):
-        return reverse_lazy('home')  # Redirect to home or a post listing page after updating a post
+    # def get_success_url(self):
+    #     return reverse_lazy('home')  # Redirect to home or a post listing page after updating a post
 
 
 class PostDeleteView(DeleteView):
     model = Post
     template_name = 'delete_post.html'
     context_object_name = 'post'
+    success_url = reverse_lazy('home')
 
-    def get_success_url(self):
-        return reverse_lazy('home')  # Redirect to home after deleting a post
+    # def get_success_url(self):
+    #     return reverse_lazy('home')  # Redirect to home after deleting a post
 
 
 class PostDetailView(DetailView):
@@ -366,3 +399,18 @@ def SearchView(request):
 # class ChefView(DetailView):
 #     model = Chef
 #     template_name = 'view_chef.html'
+class ChefProfileView(DetailView):
+    model = Chef
+    template_name = 'chef_profile.html'
+    context_object_name = 'chef'
+
+    def get_object(self):
+        # Fetch the Chef based on the provided ID
+        chef_id = self.kwargs.get('chef_id')
+        return get_object_or_404(Chef, id=chef_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Include all recipes created by this chef
+        context['recipes'] = Recipe.objects.filter(chef=self.get_object())
+        return context

@@ -18,7 +18,7 @@
         {% endfor %}
     </ul>
     <p><strong>Chef:</strong> {{ recipe.chef }}
-        <a href=""> <button type="button" class="btn btn-outline-light btn-sm">view chef's profile</button></a></p>
+        <a href="{% url 'chef_profile' recipe.chef.id %}"> <button type="button" class="btn btn-outline-secondary btn-sm">view chef's profile</button></a></p>
 
     {% if user == recipe.chef.user %}
         <nav>

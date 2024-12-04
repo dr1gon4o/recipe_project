@@ -2,24 +2,79 @@
 
 {% block content %}
 
-    {% if user.chef %}
-        <h2>{{ chef}}'s Profile</h2>
-        <p><strong>Bio:</strong> {{ chef.bio }}</p>
+    <div class=“container”>
+      <div class=“row”>
+        <div class=“col-md-8”>
+            {% if user.chef %}
+                <h2>{{ chef}}'s Profile</h2>
+                <p><strong>Bio:</strong> {{ chef.bio }}</p>
 
-        <a href="{% url 'update_profile' %}" class="btn btn-primary">Update Chef Profile</a>
-    <!--    <a href="edit" class="btn btn-primary">Edit</a>-->
-        <br>
-        <br>
-<!--        <a href="{% url 'home' %}">Back to Home</a>-->
-        <a href="{% url 'home' %}"><button type="button" class="btn btn-outline-info btn-sm">Back to Home</button></a>
-    {% else %}
-        <h2>{{ user.username }}'s Profile</h2>
-        <p><strong>Bio:</strong> {{ chef.bio }}</p>
-        <a href="{% url 'create_chef_profile' %}" class="btn btn-primary">Create Chef Profile</a>
-        <br>
-        <br>
-<!--        <a href="{% url 'home' %}">Back to Home</a>-->
-        <a href="{% url 'home' %}" class="btn btn-outline-info btn-sm">Back to Home</a>
-    {% endif %}
+                <a href="{% url 'update_profile' %}" class="btn btn-primary">Update Chef Profile</a>
+            <!--    <a href="edit" class="btn btn-primary">Edit</a>-->
+                <br>
+                <br>
+        <!--        <a href="{% url 'home' %}">Back to Home</a>-->
+                <a href="{% url 'home' %}"><button type="button" class="btn btn-outline-info btn-sm">Back to Home</button></a>
+            {% else %}
+                <h2>{{ user.username }}'s Profile</h2>
+                <p><strong>Bio:</strong> {{ chef.bio }}</p>
+                <a href="{% url 'create_chef_profile' %}" class="btn btn-primary">Create Chef Profile</a>
+                <br>
+                <br>
+        <!--        <a href="{% url 'home' %}">Back to Home</a>-->
+                <a href="{% url 'home' %}" class="btn btn-outline-info btn-sm">Back to Home</a>
+            {% endif %}
+        </div>
+        <div class=“col-md-4”>
+            <h3>My Recipes</h3>
 
+                {% if recipes %}
+                    <div class="row">
+                        {% for recipe in recipes %}
+                             <div class="col-12 col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ recipe.title }}</h5>
+                                        <p class="card-text">{{ recipe.description|truncatewords:15 }}</p>
+                                        <a href="{% url 'view_recipe' recipe.pk %}" class="btn btn-sm btn-primary">View</a>
+                                        <a href="{% url 'update_recipe' recipe.pk %}" class="btn btn-sm btn-secondary">Edit</a>
+                                        <a href="{% url 'delete_recipe' recipe.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                             </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No recipes found.</p>
+                {% endif %}
+        </div>
+      </div>
+    </div>
+
+<!--    <div>-->
+<!--        <div class=“row”>-->
+<!--            {% if user.chef %}-->
+<!--                <h2>{{ chef}}'s Profile</h2>-->
+<!--                <p><strong>Bio:</strong> {{ chef.bio }}</p>-->
+
+<!--                <a href="{% url 'update_profile' %}" class="btn btn-primary">Update Chef Profile</a>-->
+<!--            &lt;!&ndash;    <a href="edit" class="btn btn-primary">Edit</a>&ndash;&gt;-->
+<!--                <br>-->
+<!--                <br>-->
+<!--        &lt;!&ndash;        <a href="{% url 'home' %}">Back to Home</a>&ndash;&gt;-->
+<!--                <a href="{% url 'home' %}"><button type="button" class="btn btn-outline-info btn-sm">Back to Home</button></a>-->
+<!--            {% else %}-->
+<!--                <h2>{{ user.username }}'s Profile</h2>-->
+<!--                <p><strong>Bio:</strong> {{ chef.bio }}</p>-->
+<!--                <a href="{% url 'create_chef_profile' %}" class="btn btn-primary">Create Chef Profile</a>-->
+<!--                <br>-->
+<!--                <br>-->
+<!--        &lt;!&ndash;        <a href="{% url 'home' %}">Back to Home</a>&ndash;&gt;-->
+<!--                <a href="{% url 'home' %}" class="btn btn-outline-info btn-sm">Back to Home</a>-->
+<!--            {% endif %}-->
+<!--        </div>-->
+<!--        <div>-->
+
+<!--        </div>-->
+<!--    </div>-->
 {% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Chef Information -->
+        <div class="col-md-8">
+            <h2>{{ chef.name }}</h2>
+            <p><strong>Bio:</strong> {{ chef.bio }}</p>
+        </div>
+
+        <!-- Recipes by the Chef -->
+        <div class="col-md-4">
+            <h3>{{ chef.name }}'s Recipes</h3>
+            {% if recipes %}
+                <div class="row">
+                    {% for recipe in recipes %}
+                        <div class="col-12 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ recipe.title }}</h5>
+                                    <p class="card-text">{{ recipe.description|truncatewords:15 }}</p>
+                                    <a href="{% url 'view_recipe' recipe.pk %}" class="btn btn-sm btn-primary">View Recipe</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No recipes found for this chef.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

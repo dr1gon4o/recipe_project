@@ -1,31 +1,43 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from .models import Chef, Recipe, Post, Category, Ingredient
 
-class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
-    password_confirm = forms.CharField(widget=forms.PasswordInput())
 
+# class UserRegistrationForm(forms.ModelForm):
+#     password = forms.CharField(widget=forms.PasswordInput())
+#     password_confirm = forms.CharField(widget=forms.PasswordInput())
+#
+#     class Meta:
+#         model = User
+#         fields = ['email']  # Only email is required for registration
+#
+#     def clean(self):
+#         cleaned_data = super().clean()
+#         password = cleaned_data.get("password")
+#         password_confirm = cleaned_data.get("password_confirm")
+#
+#         if password != password_confirm:
+#             raise forms.ValidationError("Passwords do not match.")
+#         return cleaned_data
+#
+#     def save(self, commit=True):
+#         user = super().save(commit=False)
+#         user.username = user.email  # Use the email as the username
+#         if commit:
+#             user.set_password(self.cleaned_data['password'])
+#             user.save()
+#         return user
+
+class UserRegistrationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['email']  # Only email is required for registration
+        fields = ('username', 'password1', 'password2')
 
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        password_confirm = cleaned_data.get("password_confirm")
-
-        if password != password_confirm:
-            raise forms.ValidationError("Passwords do not match.")
-        return cleaned_data
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.username = user.email  # Use the email as the username
-        if commit:
-            user.set_password(self.cleaned_data['password'])
-            user.save()
-        return user
+    def __init__(self, *args, **kwargs):
+        super(UserRegistrationForm, self).__init__(*args, **kwargs)
+        self.fields['username'].max_length = 50
+        self.fields['username'].help_text = "Required. 50 characters or fewer. Letters, digits and @/./+/-/_ only."
 
 
 class ChefForm(forms.ModelForm):
@@ -35,6 +47,10 @@ class ChefForm(forms.ModelForm):
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 4, 'cols': 50}),
         }
+
+
+class ChefEditForm(ChefForm):
+    pass
 
 
 class RecipeForm(forms.ModelForm):
@@ -86,6 +102,14 @@ class RecipeForm(forms.ModelForm):
         # return ingredient_objs
 
 
+class RecipeEditForm(RecipeForm):
+    pass
+
+
+# class RecipeDeleteForm(RecipeForm):
+#     pass
+
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -93,3 +117,12 @@ class PostForm(forms.ModelForm):
         widgets = {
             'comment': forms.Textarea(attrs={'rows': 6, 'cols': 50}),
         }
+
+
+class PostEditForm(PostForm):
+    class Meta(PostForm.Meta):
+        exclude = ['recipe']
+
+
+# class PostDeleteForm(PostForm):
+#     pass

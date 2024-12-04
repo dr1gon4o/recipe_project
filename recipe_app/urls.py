@@ -26,6 +26,8 @@ urlpatterns = [
     path('profile/create/', views.CreateChefProfileView.as_view(), name='create_chef_profile'),
     # path('profile/create-or-update/', views.CreateOrUpdateChefProfileView.as_view(), name='create_or_update_or_update_chef_profile'),
     # path('chef-profile/', views.CreateOrUpdateChefProfileView.as_view(), name='create_or_update_chef_profile'),  # Create or update the chef profile
+    # path('profile/<int:chef_id>/', views.ProfileView.as_view(), name='chef_profile'),  # Specific chef's profile
+    path('profile/<int:chef_id>/', views.ChefProfileView.as_view(), name='chef_profile'),
 
     path('recipes/', views.RecipeListView.as_view(), name='recipe_list'),
     path('posts/', views.PostListView.as_view(), name='post_list'),
