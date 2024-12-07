@@ -53,13 +53,97 @@ class ChefEditForm(ChefForm):
     pass
 
 
+# class RecipeForm(forms.ModelForm):
+#     # Free text input for categories and ingredients (no pre-selection of existing ones)
+#     categories = forms.CharField(
+#         max_length=255,
+#         required=False,
+#         help_text="Enter new categories, separated by commas."
+#     )
+#     ingredients = forms.CharField(
+#         max_length=255,
+#         required=False,
+#         help_text="Enter new ingredients, separated by commas."
+#     )
+#
+#     class Meta:
+#         model = Recipe
+#         fields = ['title', 'description', 'instructions', 'categories', 'ingredients']
+#         widgets = {
+#             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter recipe title'}),
+#             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter recipe description'}),
+#             'instructions': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Enter cooking instructions'}),
+#         }
+#
+#     # def __init__(self, *args, **kwargs):
+#     #     super(RecipeForm, self).__init__(*args, **kwargs)
+#     #
+#     #     # Prefill categories and ingredients for updates
+#     #     if self.instance.pk:  # This means we are updating an existing recipe
+#     #         category_names = ', '.join([category.name for category in self.instance.categories.all()])
+#     #         ingredient_names = ', '.join([ingredient.name for ingredient in self.instance.ingredients.all()])
+#     #         self.fields['categories'].initial = category_names
+#     #         self.fields['ingredients'].initial = ingredient_names
+#
+#     def clean_categories(self):
+#         data = self.cleaned_data['categories']
+#         category_names = [category.strip() for category in data.split(',')]  # Split categories by commas
+#         # Create new categories if they don't exist
+#         categories = []
+#         for category_name in category_names:
+#             category_obj, created = Category.objects.get_or_create(name=category_name)
+#             categories.append(category_obj)
+#         return categories
+#
+#     def clean_ingredients(self):
+#         data = self.cleaned_data['ingredients']
+#         ingredient_names = data.split(',')  # Split ingredients by commas
+#         # Create new ingredients if they don't exist
+#         ingredients = []
+#         for ingredient_name in ingredient_names:
+#             ingredient_obj, created = Ingredient.objects.get_or_create(name=ingredient_name)
+#             ingredients.append(ingredient_obj)
+#         return ingredients
+#
+#     def save(self, commit=True):
+#         instance = super().save(commit=False)
+#
+#         if commit:
+#             instance.save()
+#
+#         # Save the categories and ingredients relationships (many-to-many fields)
+#         instance.categories.set(self.cleaned_data['categories'])
+#         instance.ingredients.set(self.cleaned_data['ingredients'])
+#
+#         return instance
+
+
 class RecipeForm(forms.ModelForm):
-    categories = forms.CharField(max_length=255, required=True, help_text="Enter the categories, separated by commas.")
-    ingredients = forms.CharField(max_length=255, required=True, help_text="Enter the ingredients, separated by commas.")
+    categories = forms.CharField(max_length=255, required=True,
+                                 help_text="Enter the categories, separated by commas.",
+                                 widget=forms.TextInput(attrs={'placeholder': 'e.g., lunch, dinner'}),)
+    ingredients = forms.CharField(max_length=255, required=True,
+                                  help_text="Enter the ingredients, separated by commas.",
+                                  widget=forms.TextInput(attrs={'placeholder': 'e.g., sugar, flour'}),)
 
     class Meta:
         model = Recipe
         fields = ['title', 'description', 'instructions', 'categories', 'ingredients']
+        widgets = {
+                    'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter recipe title'}),
+                    'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter recipe description'}),
+                    'instructions': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Enter cooking instructions'}),
+                }
+
+    def __init__(self, *args, **kwargs):
+        # Call the parent constructor
+        super().__init__(*args, **kwargs)
+
+        # If the form is bound to an instance (update scenario), populate the fields
+        if self.instance.pk:  # Check if an instance is passed (update form)
+            self.fields['categories'].initial = ', '.join([c.name for c in self.instance.categories.all()])
+            self.fields['ingredients'].initial = ', '.join([i.name for i in self.instance.ingredients.all()])
+
 
     def clean_categories(self):
         data = self.cleaned_data['categories']
@@ -101,9 +185,23 @@ class RecipeForm(forms.ModelForm):
         #     ingredient_objs.append(ingredient_obj)
         # return ingredient_objs
 
+    def save(self, commit=True):
+        # Override save method to handle many-to-many relationships
+        instance = super().save(commit=False)
+
+        if commit:
+            instance.save()  # Save the instance to generate a primary key if necessary
+            # Add categories and ingredients
+            instance.categories.set(self.cleaned_data['categories'])
+            instance.ingredients.set(self.cleaned_data['ingredients'])
+
+        return instance
+
 
 class RecipeEditForm(RecipeForm):
-    pass
+    class Meta(RecipeForm.Meta):
+        model = Recipe
+        exclude = ['categories', 'ingredients']
 
 
 # class RecipeDeleteForm(RecipeForm):
@@ -115,7 +213,7 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['recipe', 'comment']
         widgets = {
-            'comment': forms.Textarea(attrs={'rows': 6, 'cols': 50}),
+            'comment': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Enter recipe comment'}),
         }
 
 
