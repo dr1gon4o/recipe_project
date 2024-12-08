@@ -1,10 +1,9 @@
-from django.contrib import admin
 from django.urls import path
 from . import views
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+
     path('', views.HomeView.as_view(), name='home'),
 
     path('register/', views.RegisterView.as_view(), name='register'),
@@ -22,11 +21,10 @@ urlpatterns = [
     path('post/<int:pk>/', views.PostDetailView.as_view(), name='view_post'),
 
     path('profile/', views.ProfileView.as_view(), name='profile'),
-    path('profile/edit/', views.ProfileUpdateView.as_view(), name='update_profile'),  # New update profile path
+    path('profile/edit/', views.ProfileUpdateView.as_view(), name='update_profile'),
     path('profile/create/', views.CreateChefProfileView.as_view(), name='create_chef_profile'),
     # path('profile/create-or-update/', views.CreateOrUpdateChefProfileView.as_view(), name='create_or_update_or_update_chef_profile'),
-    # path('chef-profile/', views.CreateOrUpdateChefProfileView.as_view(), name='create_or_update_chef_profile'),  # Create or update the chef profile
-    # path('profile/<int:chef_id>/', views.ProfileView.as_view(), name='chef_profile'),  # Specific chef's profile
+    # path('chef-profile/', views.CreateOrUpdateChefProfileView.as_view(), name='create_or_update_chef_profile'),
     path('profile/<int:chef_id>/', views.ChefProfileView.as_view(), name='chef_profile'),
 
     path('recipes/', views.RecipeListView.as_view(), name='recipe_list'),

@@ -414,3 +414,4 @@ class ChefProfileView(DetailView):
         # Include all recipes created by this chef
         context['recipes'] = Recipe.objects.filter(chef=self.get_object())
         return context
+

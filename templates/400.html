@@ -1,0 +1,25 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Bad Request</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <h1>400 - Bad Request</h1>-->
+<!--    <p>Your request could not be processed. Please try again later.</p>-->
+<!--    <a href="/">Return to Home</a>-->
+<!--</body>-->
+<!--</html>-->
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container text-center">
+        <h1 class="display-4">Bad Request (400)</h1>
+        <p>Your request could not be processed by the server.</p>
+        <p>It might be due to missing or incorrect parameters. Please check your request and try again.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+    </div>
+{% endblock %}
