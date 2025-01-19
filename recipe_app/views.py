@@ -15,17 +15,24 @@ class HomeView(ListView):
     model = Recipe
     template_name = 'home.html'
     context_object_name = 'recipes'
+    # paginate_by = 7
+    queryset = Recipe.objects.all().order_by('id')
     paginate_by = 7
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         # Paginate posts
-        post_list = Post.objects.all()
+        post_list = Post.objects.all().order_by('id')
         # recipe_list = Recipe.object.all()
         post_paginator = Paginator(post_list, 6)  # Set the number of posts per page
         page_number = self.request.GET.get('post_page')  # Get the page number for posts
         post_page_obj = post_paginator.get_page(page_number)
+
+        # try:
+        #     post_page_obj = post_paginator.get_page(page_number)
+        # except (EmptyPage, PageNotAnInteger):
+        #     post_page_obj = post_paginator.get_page(1)
 
         # context['posts'] = Post.objects.all()  # Add posts to the context
         context['posts'] = post_page_obj  # Pass paginated posts to the context
@@ -414,4 +421,3 @@ class ChefProfileView(DetailView):
         # Include all recipes created by this chef
         context['recipes'] = Recipe.objects.filter(chef=self.get_object())
         return context
-
